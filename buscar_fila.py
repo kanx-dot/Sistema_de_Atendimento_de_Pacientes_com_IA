@@ -43,10 +43,10 @@ def a_estrela(pacientes_iniciais, tempo_atendimento=10): #<--- Algoritmo A* pra 
         if not estado_atual.pacientes_restantes:
             return estado_atual.atendidos, estado_atual.custo_g
 
-        if nos_explorados > 5000:
-            print("(!!!!!) Limite de busca atingido para evitar travamento... Retornando a melhor ordenação encontrada.")
-            #Retorna o que já foi atendido + o que sobrou na fila do estado atual
-            ordem_estimada = estado_atual.atendidos + estado_atual.pacientes_restantes
+        if nos_explorados > 5000: #<--- Vai ordenar os pacientes que sobraram do maior para o menor risco
+            print("⚠️ Limite de busca atingido para evitar travamento. Ordenando o restante de forma otimizada.")
+            resto_ordenado = sorted(estado_atual.pacientes_restantes, key=lambda x: x.p_gravidade_alta, reverse=True)
+            ordem_estimada = estado_atual.atendidos + resto_ordenado
             return ordem_estimada, estado_atual.custo_g
 
         #Criar uma representação única do estado para não repetir caminhos
@@ -86,4 +86,4 @@ def a_estrela(pacientes_iniciais, tempo_atendimento=10): #<--- Algoritmo A* pra 
 
             heapq.heappush(fronteira, proximo_estado)
 
-    return None, float('inf')    
+    return None, float('inf')
