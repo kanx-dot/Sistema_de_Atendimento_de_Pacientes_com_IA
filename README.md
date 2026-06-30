@@ -3,7 +3,9 @@
 ### Repositório do Trabalho de Inteligência Artificial Aplicada gerenciada pelo professor José Macedo, da Universidade Federal do Ceará. 
 #
 ### ⚫ Realizada com: Linguagem Python 
-#
+
+---
+
 ### 🔧 Participantes do trabalho:
 #### -   Kauã Cavalcante Modesto de Souza (570304)
 #### -   Carlos Abimael (587010)
