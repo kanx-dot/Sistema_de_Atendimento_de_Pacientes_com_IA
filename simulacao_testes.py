@@ -1,6 +1,7 @@
 import copy
 from paciente import Paciente
 from busca_fila import a_estrela
+from rede_bayesiana import obter_probabilidade_gravidade
 
 def simular_fifo(pacientes_iniciais, tempo_atendimento=10): #<---- o que a FIFO deve fazer: Atender os pacientes estritamente na ordem em que estão na lista.
     pacientes = copy.deepcopy(pacientes_iniciais)
@@ -36,47 +37,59 @@ def simular_gulosa(pacientes_iniciais, tempo_atendimento=10): #<--- o que a Gulo
     return atendidos, custo_g_total
 
 
-# --- Cenário de Experimento Prático ---
+#===================================================================================================================#
+
+
+#==== Cenário de Experimento Prático ====
 if __name__ == "__main__":
     print("="*60)
-    print("        SIMULADOR DE TRIAGEM HOSPITALAR INTELIGENTE       ")
+    print("        SIMULADOR INTEGRADO: REDE BAYESIANA + A*     ")
     print("="*60)
+
+
+# -----------------------------------------------------------------
+                        #1. CENÁRIO PEQUENO 
+# -----------------------------------------------------------------
+    print("\n>>> CONFIGURANDO CENÁRIO PEQUENO (6 PACIENTES FIXOS) <<<")
+
+#Criamos os pacientes fictícios para podermos realizar nossas simulações!! No Cenário Pequeno, onde é mais razoável ir a mão, digitamos individualmente cada caso. No Médio, usamos um for para gerar pacientes simulados aleatoriamente,
+#considerando o N° maior de pacientes no total em comparação à apenas 6
     
-#Criamos, agora, pacientes fictícios para podermos realizar nossas simulações!!
-    
-    cenario_pacientes = [
-        Paciente("Carlos (Grave)", 0.95),
-        Paciente("Ana (Moderada)", 0.45),
-        Paciente("Bruno (Leve)", 0.10),
-        Paciente("Daniela (Grave)", 0.88),
-        Paciente("Eduardo (Moderado)", 0.50)
+cenario_pequeno = [
+        criar_paciente_sintomatico("João (Muito Grave)", {'Febre': 1, 'Saturacao': 1, 'Pressao_Arterial': 0, 'Frequencia_Cardiaca': 1, 'Nivel_Dor': 1, 'Idade_Comorbidade': 1, 'Nivel_Consciencia': 1}),
+        criar_paciente_sintomatico("Maria (Leve)",        {'Febre': 0, 'Saturacao': 0, 'Pressao_Arterial': 0, 'Frequencia_Cardiaca': 0, 'Nivel_Dor': 1, 'Idade_Comorbidade': 0, 'Nivel_Consciencia': 0}),
+        criar_paciente_sintomatico("Pedro (Moderado)",   {'Febre': 1, 'Saturacao': 0, 'Pressao_Arterial': 1, 'Frequencia_Cardiaca': 1, 'Nivel_Dor': 0, 'Idade_Comorbidade': 0, 'Nivel_Consciencia': 0}),
+        criar_paciente_sintomatico("Ana (Grave)",         {'Febre': 0, 'Saturacao': 1, 'Pressao_Arterial': 1, 'Frequencia_Cardiaca': 1, 'Nivel_Dor': 1, 'Idade_Comorbidade': 1, 'Nivel_Consciencia': 0}),
+        criar_paciente_sintomatico("Lucas (Leve)",       {'Febre': 1, 'Saturacao': 0, 'Pressao_Arterial': 0, 'Frequencia_Cardiaca': 0, 'Nivel_Dor': 0, 'Idade_Comorbidade': 0, 'Nivel_Consciencia': 0}),
+        criar_paciente_sintomatico("Carla (Moderado)",    {'Febre': 0, 'Saturacao': 0, 'Pressao_Arterial': 1, 'Frequencia_Cardiaca': 0, 'Nivel_Dor': 1, 'Idade_Comorbidade': 1, 'Nivel_Consciencia': 0})
     ]
     
-    print("\n[CONFIGURAÇÃO] Pacientes Iniciais na Fila:")
-    for p in cenario_pacientes:
-        print(f" - {p.nome} | P(Gravidade Alta): {p.p_gravidade_alta:.2%}")
-    print("-" * 60)
-
-    # 1. Executando FIFO
-    ordem_fifo, custo_fifo = simular_fifo(cenario_pacientes)
-    print(f"\n🟢 RESULTADO FIFO:")
-    print(f" Ordem: { [p.nome for p in ordem_fifo] }")
-    print(f" Risco Acumulado Total: {custo_fifo:.4f}")
-
-    # 2. Executando GULOSA
-    ordem_gulosa, custo_gulosa = simular_gulosa(cenario_pacientes)
-    print(f"\n🟡 RESULTADO GULOSA:")
-    print(f" Ordem: { [p.nome for p in ordem_gulosa] }")
-    print(f" Risco Acumulado Total: {custo_gulosa:.4f}")
-
-    # 3. Executando A*
-    ordem_astar, custo_astar = a_estrela(cenario_pacientes)
-    print(f"\n🔵 RESULTADO A* (ÓTIMO):")
-    print(f" Ordem: { [p.nome for p in ordem_astar] }")
-    print(f" Risco Acumulado Total: {custo_astar:.4f}")
+    _, custo_fifo_p = simular_fifo(cenario_pequeno)
+    _, custo_gulosa_p = simular_gulosa(cenario_pequeno)
+    ordem_astar_p, custo_astar_p = a_estrela(cenario_pequeno)
     
-    print("\n" + "="*60)
-    print("🎯 CONCLUSÃO PARA O RELATÓRIO:")
-    reducao = ((custo_fifo - custo_astar) / custo_fifo) * 100
-    print(f"O algoritmo A* reduziu o risco de deterioração em {reducao:.2f}% comparado ao FIFO!")
+    print(f"🔴 Custo FIFO: {custo_fifo_p:.2f} | 🟡 Custo GULOSA: {custo_gulosa_p:.2f} | 🔵 Custo A*: {custo_astar_p:.2f}")
+    print(f"Ordem de chamada do A*: {[p.nome for p in ordem_astar_p]}")
+
+# -----------------------------------------------------------------
+            #2. CENÁRIO MÉDIO (Automatizado com LOOP FOR)
+#------------------------------------------------------------------
+
+print("\n" + "="*60)
+    print(">>> CONFIGURANDO CENÁRIO MÉDIO (25 PACIENTES ALEATÓRIOS) <<<")
+    
+    cenario_medio = []
+    chaves = ['Febre', 'Saturacao', 'Pressao_Arterial', 'Frequencia_Cardiaca', 'Nivel_Dor', 'Idade_Comorbidade', 'Nivel_Consciencia']
+    
+    for i in range(1, 26):
+        sintomas_aleatorios = {s: random.choice([0, 1]) for s in chaves}
+        paciente_random = criar_paciente_sintomatico(f"Paciente_{i}", sintomas_aleatorios)
+        cenario_medio.append(paciente_random)
+        
+    #Rodando as simulações do Cenário Médio...
+    _, custo_fifo_m = simular_fifo(cenario_medio)
+    _, custo_gulosa_m = simular_gulosa(cenario_medio)
+    _, custo_astar_m = a_estrela(cenario_medio)
+    
+    print(f"🔴 Custo FIFO: {custo_fifo_m:.2f} | 🟡 Custo GULOSA: {custo_gulosa_m:.2f} | 🔵 Custo A*: {custo_astar_m:.2f}")
     print("="*60)
