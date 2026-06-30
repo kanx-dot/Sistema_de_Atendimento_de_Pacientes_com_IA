@@ -74,8 +74,10 @@ _, custo_fifo_p = simular_fifo(cenario_pequeno)
 _, custo_gulosa_p = simular_gulosa(cenario_pequeno)
 ordem_astar_p, custo_astar_p = a_estrela(cenario_pequeno)
     
-print(f"🔴 Custo FIFO: {custo_fifo_p:.2f} | 🟡 Custo GULOSA: {custo_gulosa_p:.2f} | 🔵 Custo A*: {custo_astar_p:.2f}")
-print(f"Ordem de chamada do A*: {[p.nome for p in ordem_astar_p]}")
+print(f"🔴 Custo FIFO: {custo_fifo_p:.2f} ")
+print(f'🟡 Custo GULOSA: {custo_gulosa_p:.2f}')
+print(f'🔵 Custo A*: {custo_astar_p:.2f}')
+print(f"\n📋 Ordem de chamada do A*: {[p.nome for p in ordem_astar_p]}")
 
 # -----------------------------------------------------------------
                         #2. CENÁRIO MÉDIO
@@ -85,9 +87,9 @@ print("\n" + "="*60)
 print(">>> CONFIGURANDO CENÁRIO MÉDIO (20 PACIENTES FIXOS) <<<")
     
    
-    #Considerando o fato de ser um número substancialmente maior que 5, caso pudéssemos de qualquer jeito,
-    #haveria a chance do código demorar muito para rodar, então, para o Cenário Médio, vamos organizar a fila inicial do paciente mais greve
-    #para o menos grave, maximizando a eficiência da função heurística h(n), permitindo que o A* rode mais rápido, mesmo com 20 pacientes
+#Considerando o fato de ser um número substancialmente maior que 5, caso pudéssemos de qualquer jeito,
+#haveria a chance do código demorar muito para rodar, então, para o Cenário Médio, vamos organizar a fila inicial do paciente mais greve
+#para o menos grave, maximizando a eficiência da função heurística h(n), permitindo que o A* rode mais rápido, mesmo com 20 pacientes
      
 dados_pacientes_fixos = [
         ("Roberto (Crítico)",    {'Febre': 1, 'Saturacao': 1, 'Pressao_Arterial': 1, 'Frequencia_Cardiaca': 1, 'Nivel_Dor': 1, 'Idade_Comorbidade': 1, 'Nivel_Consciencia': 1}),
@@ -117,17 +119,12 @@ for nome, sintomas in dados_pacientes_fixos:
         paciente_instanciado = criar_paciente_sintomatico(nome, sintomas)
         cenario_medio.append(paciente_instanciado)
         
-
-#Colocar o tempo_atendimento=1 faz com que A* mate a árvore de busca quase na primeira tentativa, tornando mais eficiente o cálculo do custo total
-#já que o tempo de espera de cada paciente aumenta menos, e o risco total acumulado é menor, permitindo que o A* encontre a ordem ótima mais rapidamente
-
-print("\n--- Executando Simulações (Cenário Médio Fixado) ---")
 _, custo_fifo_m = simular_fifo(cenario_medio, tempo_atendimento=1)
 _, custo_gulosa_m = simular_gulosa(cenario_medio, tempo_atendimento=1)
 ordem_astar_m, custo_astar_m = a_estrela(cenario_medio, tempo_atendimento=1)
     
-print(f"🔴 Custo FIFO: {custo_fifo_m:.2f}")
+print(f"🔴 Custo FIFO: {custo_fifo_m:.2f} ")
 print(f"🟡 Custo GULOSA: {custo_gulosa_m:.2f}")
-print(f"🔵 Custo A* (Ótimo): {custo_astar_m:.2f}")
-print(f"Ordem de chamada do A* para os 20: {[p.nome for p in ordem_astar_m[:5]]} ... e mais 15 pacientes.")
+print(f"🔵 Custo A*: {custo_astar_m:.2f}")
+print(f"\n📋 Ordem de chamada do A*: {[p.nome for p in ordem_astar_m]}")
 print("="*60)
