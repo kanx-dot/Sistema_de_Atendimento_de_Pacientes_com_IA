@@ -17,7 +17,7 @@ Construção de um sistema inteligente voltado para fins médicos, os quais se d
 ---
 
 ### ⚫ Como o sistema funciona?
-####O sistema é dividido em dois módulos principais que se comunicam diretamente:
+#### O sistema é dividido em dois módulos principais que se comunicam diretamente:
 
 * **Módulo 1 — Rede Bayesiana (`rede_bayesiana.py`):** Recebe as evidências clínicas do paciente (7 variáveis como Febre, Saturação de O2, Pressão Arterial, Frequência Cardíaca, Nível de Dor, Idade/Comorbidade e Nível de Consciência) e calcula a probabilidade matemática do paciente estar em estado grave.
 * **Módulo 2 — Algoritmo A\* (`busca_astar.py`):** Utiliza a probabilidade calculada no Módulo 1 e o tempo em que o paciente está aguardando na fila para encontrar a sequência ideal de atendimento que **minimiza o risco acumulado total de deterioração clínica**.
