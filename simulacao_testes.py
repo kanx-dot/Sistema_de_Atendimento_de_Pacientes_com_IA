@@ -1,6 +1,6 @@
 import copy
 from paciente import Paciente
-from busca_astar import a_estrela
+from busca_fila import 
 
 def simular_fifo(pacientes_iniciais, tempo_atendimento=10): #<---- o que a FIFO deve fazer: Atender os pacientes estritamente na ordem em que estão na lista.
     pacientes = copy.deepcopy(pacientes_iniciais)
