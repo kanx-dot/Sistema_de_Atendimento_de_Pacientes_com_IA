@@ -16,7 +16,7 @@ plt.rcParams['font.size'] = 12
 
 #ESTRUTURA DA REDE
 
-modelo_hospital = BayesianNetwork([
+modelo_hospital = DiscreteBayesianNetwork([
     ('Febre', 'Gravidade'),
     ('Saturacao', 'Gravidade'),
     ('Pressao_Arterial', 'Gravidade'),
@@ -78,6 +78,7 @@ assert modelo_hospital.check_model(), "Erro na consistência das tabelas!"
 #Definimos o Motor de Inferência agora
 inferencia = VariableElimination(modelo_hospital)
 
-def calcular_probabilidade_gravidade(sintomas_paciente): #<--- Esta função recebe os sintomas do paciente e retorna a probabilidade para que seu quadro seja grave
+def obter_probabilidade_gravidade(sintomas_paciente): #<--- Esta função recebe os sintomas do paciente e retorna a probabilidade para que seu quadro seja grave
     resultado = inferencia.query(variables=['Gravidade'], evidence=sintomas_paciente)
     return float(resultado.values[1])
+
