@@ -81,4 +81,3 @@ inferencia = VariableElimination(modelo_hospital)
 def obter_probabilidade_gravidade(sintomas_paciente): #<--- Esta função recebe os sintomas do paciente e retorna a probabilidade para que seu quadro seja grave
     resultado = inferencia.query(variables=['Gravidade'], evidence=sintomas_paciente)
     return float(resultado.values[1])
-
