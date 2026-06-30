@@ -1,3 +1,4 @@
+import copy
 from paciente import Paciente
 from rede_bayesiana import obter_probabilidade_gravidade
 import heapq
@@ -27,6 +28,8 @@ def a_estrela(pacientes_iniciais, tempo_atendimento=10): #<--- Algoritmo A* pra 
     #Fila de prioridade (Min-Heap) para guardar os estados a serem expandidos
     fronteira = []
     heapq.heappush(fronteira, estado_inicial)
+    visitados = set()
+    nos_explorados = 0
     
     #Conjunto para evitar reprocessar estados idênticos (opcional, mas boa prática)
     visitados = set()
@@ -34,10 +37,17 @@ def a_estrela(pacientes_iniciais, tempo_atendimento=10): #<--- Algoritmo A* pra 
     while fronteira:
         #Pegamos o estado com o menor f(n)
         estado_atual = heapq.heappop(fronteira)
+        nos_explorados += 1
 
         #Se não há mais ninguém para atender, achamos a ordem perfeita!
         if not estado_atual.pacientes_restantes:
             return estado_atual.atendidos, estado_atual.custo_g
+
+        if nos_explorados > 5000:
+            print("(!!!!!) Limite de busca atingido para evitar travamento... Retornando a melhor ordenação encontrada.")
+            #Retorna o que já foi atendido + o que sobrou na fila do estado atual
+            ordem_estimada = estado_atual.atendidos + estado_atual.pacientes_restantes
+            return ordem_estimada, estado_atual.custo_g
 
         #Criar uma representação única do estado para não repetir caminhos
         assinatura_estado = tuple(p.nome for p in estado_atual.pacientes_restantes)
@@ -57,8 +67,7 @@ def a_estrela(pacientes_iniciais, tempo_atendimento=10): #<--- Algoritmo A* pra 
             atendidos_copia.append(paciente_atendido)
 
             # --- O CÁLCULO DO CUSTO DO PASSO ---
-            # Enquanto o médico atende o 'paciente_atendido' por X minutos,
-            # o tempo de espera de TODOS os outros que ficaram na fila aumenta!
+            #Enquanto o médico atende o 'paciente_atendido' por X minutos... o tempo de espera de TODOS os outros que ficaram na fila aumenta!
             custo_passo = 0
             for p in restantes_copia:
                 p.tempo_espera += tempo_atendimento
@@ -77,4 +86,4 @@ def a_estrela(pacientes_iniciais, tempo_atendimento=10): #<--- Algoritmo A* pra 
 
             heapq.heappush(fronteira, proximo_estado)
 
-    return None, float('inf')
+    return None, float('inf')    
