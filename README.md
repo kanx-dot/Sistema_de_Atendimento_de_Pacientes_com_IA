@@ -31,7 +31,7 @@ Construção de um sistema inteligente voltado para fins médicos, os quais se d
 * `rede_bayesiana.py`: Definição da estrutura da Rede Bayesiana e do motor de inferência via `pgmpy`.
 * `paciente.py`: Classe que define o objeto Paciente e o cálculo do risco de deterioração individual.
 * `busca_astar.py`: Implementação do espaço de estados, função heurística admissível e o algoritmo de busca A\*.
-* `simulador_testes.py`: Script central modular que configura os cenários de teste e compara o A\* com as abordagens **FIFO** e **Gulosa**.
+* `simulacao_testes.py`: Script central modular que configura os cenários de teste e compara o A\* com as abordagens **FIFO** e **Gulosa**.
 
 ### ⚫ Como executar o Projeto passo a passo
 
@@ -44,6 +44,6 @@ Certifique-se de ter o **Python 3.8+** instalado em sua máquina.
 * 2.3. Abra o VSCode, vá em Arquivo -> Abra Pasta e então selecione a pasta extraída
 
 ### 3. Executando o sistema
-Execute no terminal `pip install pgmpy` e `python simulador_testes.py`
+Execute no terminal `pip install -r requirements.txt` e depois `python simulacao_testes.py`
 
 

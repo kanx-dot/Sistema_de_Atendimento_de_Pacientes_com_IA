@@ -55,7 +55,7 @@ for i in range(num_combinacoes):
     
     #Mapeia o score para uma probabilidade entre 0.01 e 0.99
     p_alta = 0.01 + (score / max_score) * 0.98
-    p_alta = min(0.99, max_score) if p_alta > 0.99 else p_alta
+    p_alta = min(0.99, p_alta)
     prob_gravidade_alta.append(p_alta)
 
 prob_gravidade_baixa = [1.0 - p for p in prob_gravidade_alta]
